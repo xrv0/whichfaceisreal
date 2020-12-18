@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example</title>
+</head>
+<body>
+
+<p>Click on the real image!</p>
+
+<img src="" alt="Loading..." id="img-1" onclick="check(img1Real)">
+<img src="" alt="Loading..." id="img-2" onclick="check(img2Real)">
+
+<script>
+    const img1 = document.getElementById("img-1");
+    const img2 = document.getElementById("img-2");
+
+    let img1Real = false;
+    let img2Real = true;
+    fetch('http://localhost:3000/generate-pair')
+        .then(response => response.json())
+        .then(data => {
+            if(Math.random() < 0.5) {
+                img1.setAttribute("src", data["fakeImage"]);
+                img2.setAttribute("src", data["realImage"]);
+            }else {
+                img1.setAttribute("src", data["realImage"]);
+                img2.setAttribute("src", data["fakeImage"]);
+                img1Real = true;
+                img2Real = false;
+            }
+        });
+
+    function check(real) {
+        if(img1Real) {
+            img1.style = "border:10px solid green;";
+            img2.style = "border:10px solid red;"
+        }else if(img2Real) {
+            img1.style = "border:10px solid red;";
+            img2.style = "border:10px solid green;"
+        }
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000 * 1.5)
+    }
+</script>
+
+</body>
+</html>
